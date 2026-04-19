@@ -10,7 +10,7 @@ on:
         required: true
         default: 'test'
       force_destroy:
-        description: 'Whether to force destroy the environment (use with caution)'
+        description: 'Whether to force destroy the environment'
         required: true
         default: false
         type: boolean

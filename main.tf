@@ -36,13 +36,12 @@ resource "aws_egress_only_internet_gateway" "this" {
 resource "aws_subnet" "public" {
   for_each = local.public_subnets
 
-  vpc_id                              = aws_vpc.this.id
-  availability_zone                   = each.value.az
-  ipv6_cidr_block                     = each.value.ipv6_cidr_block
-  ipv6_native                         = true
-  assign_ipv6_address_on_creation     = true
-  map_public_ip_on_launch             = false
-  private_dns_hostname_type_on_launch = "resource-name"
+  vpc_id                                          = aws_vpc.this.id
+  availability_zone                               = each.value.az
+  ipv6_cidr_block                                 = each.value.ipv6_cidr_block
+  ipv6_native                                     = true
+  assign_ipv6_address_on_creation                 = true
+  enable_resource_name_dns_aaaa_record_on_launch  = true
 
   tags = merge(local.tags,
     {
@@ -56,13 +55,12 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "private" {
   for_each = local.private_subnets
 
-  vpc_id                              = aws_vpc.this.id
-  availability_zone                   = each.value.az
-  ipv6_cidr_block                     = each.value.ipv6_cidr_block
-  ipv6_native                         = true
-  assign_ipv6_address_on_creation     = true
-  map_public_ip_on_launch             = false
-  private_dns_hostname_type_on_launch = "resource-name"
+  vpc_id                                          = aws_vpc.this.id
+  availability_zone                               = each.value.az
+  ipv6_cidr_block                                 = each.value.ipv6_cidr_block
+  ipv6_native                                     = true
+  assign_ipv6_address_on_creation                 = true
+  enable_resource_name_dns_aaaa_record_on_launch  = true
 
   tags = merge(local.tags,
     {
