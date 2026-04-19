@@ -1,0 +1,46 @@
+# This is a manual workflow that can be triggered from the Actions tab in GitHub UI. It allows you to test the deployment process by running Terraform Apply against a disposable environment.
+
+name: Manual - Test Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      validation_environment:
+        description: 'Name for the Validation Environment to deploy'
+        required: true
+        default: 'test'
+      force_destroy:
+        description: 'Whether to force destroy the environment (use with caution)'
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  id-token: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  dev-apply:
+    name: "[DEV] - Deploy"
+    uses: faccomichele/utils-n-scripts/.github/workflows/terraform-run.yml@main
+    with:
+      environment: 'dev'
+      region: 'eu-central-1'
+      working-directory: '.'
+      action: 'apply'
+      validation_environment: ${{ inputs.validation_environment || 'invalid' }}
+    secrets: inherit
+
+  dev-destroy:
+    name: "[DEV] - Cleanup"
+    needs: dev-apply
+    if: ${{ always() && (github.event.inputs.force_destroy == true || needs.dev-apply.result == 'success') }}
+    uses: faccomichele/utils-n-scripts/.github/workflows/terraform-run.yml@main
+    with:
+      environment: 'dev'
+      region: 'eu-central-1'
+      working-directory: '.'
+      action: 'destroy'
+      validation_environment: ${{ inputs.validation_environment || 'invalid' }}
+    secrets: inherit
