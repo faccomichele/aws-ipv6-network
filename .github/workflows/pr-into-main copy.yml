@@ -24,7 +24,6 @@ jobs:
       region: 'eu-central-1'
       working-directory: '.'
       action: 'apply'
-      upload-output-artifact: false
       validation_environment: ${{ inputs.validation_environment || 'invalid' }}
     secrets: inherit
 

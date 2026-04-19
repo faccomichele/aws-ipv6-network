@@ -22,5 +22,4 @@ jobs:
       region: 'eu-central-1'
       working-directory: '.'
       action: 'plan'
-      upload-output-artifact: false
     secrets: inherit
