@@ -1,6 +1,6 @@
 # This triggers on all merged PRs into main
 
-name: Cleanup/Destroy
+name: Main - Cleanup/Destroy
 
 on:
   workflow_dispatch:
