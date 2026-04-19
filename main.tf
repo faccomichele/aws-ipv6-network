@@ -159,8 +159,6 @@ resource "aws_network_acl_rule" "public_ingress_vpc" {
   protocol        = "-1"
   rule_action     = "allow"
   ipv6_cidr_block = aws_vpc.this.ipv6_cidr_block
-  from_port       = 0
-  to_port         = 0
 }
 
 resource "aws_network_acl_rule" "public_ingress_https" {
@@ -192,8 +190,6 @@ resource "aws_network_acl_rule" "public_egress_vpc" {
   protocol        = "-1"
   rule_action     = "allow"
   ipv6_cidr_block = aws_vpc.this.ipv6_cidr_block
-  from_port       = 0
-  to_port         = 0
 }
 
 resource "aws_network_acl_rule" "public_egress_https" {
@@ -236,8 +232,6 @@ resource "aws_network_acl_rule" "private_ingress_vpc" {
   protocol        = "-1"
   rule_action     = "allow"
   ipv6_cidr_block = aws_vpc.this.ipv6_cidr_block
-  from_port       = 0
-  to_port         = 0
 }
 
 resource "aws_network_acl_rule" "private_ingress_ephemeral" {
@@ -258,8 +252,6 @@ resource "aws_network_acl_rule" "private_egress_vpc" {
   protocol        = "-1"
   rule_action     = "allow"
   ipv6_cidr_block = aws_vpc.this.ipv6_cidr_block
-  from_port       = 0
-  to_port         = 0
 }
 
 resource "aws_network_acl_rule" "private_egress_https" {
