@@ -9,6 +9,11 @@ on:
         description: 'Name for the Validation Environment to deploy'
         required: true
         default: 'test'
+      force_destroy:
+        description: 'Whether to force destroy the environment (use with caution)'
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   id-token: write
@@ -24,13 +29,13 @@ jobs:
       region: 'eu-central-1'
       working-directory: '.'
       action: 'apply'
-      upload-output-artifact: false
       validation_environment: ${{ inputs.validation_environment || 'invalid' }}
     secrets: inherit
 
   dev-destroy:
     name: "[DEV] - Cleanup"
     needs: dev-apply
+    if: ${{ always() && (github.event.inputs.force_destroy == true || needs.dev-apply.result == 'success') }}
     uses: faccomichele/utils-n-scripts/.github/workflows/terraform-run.yml@main
     with:
       environment: 'dev'
