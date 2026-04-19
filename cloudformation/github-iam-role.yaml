@@ -148,6 +148,12 @@ Resources:
                 Effect: Allow
                 Action:
                   - ec2:DescribeAccountAttributes
+                  - ec2:DescribeVpcAttribute
+                  - ec2:DescribeNetworkInterfaces
+                  - ec2:DescribeAddresses
+                  - ec2:DescribeDhcpOptions
+                  - ec2:DescribeVpcPeeringConnections
+                  - ec2:DescribeNatGateways
                   - ec2:DescribeRegions
                 Resource: '*'
       Tags:
