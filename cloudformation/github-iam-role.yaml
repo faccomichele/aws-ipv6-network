@@ -40,7 +40,7 @@ Parameters:
   ProjectName:
     Type: String
     Description: Name of the GitHub repository (change this when copying to another repo)
-    Default: simple-saml-idp
+    Default: aws-ipv6-network
     MinLength: 1
     MaxLength: 100
     AllowedPattern: ^[a-zA-Z0-9._-]+$
@@ -96,239 +96,59 @@ Resources:
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
-              # Lambda permissions
-              - Sid: LambdaManagement
+              # EC2/VPC network resource management used by this repository Terraform templates
+              - Sid: EC2NetworkManagement
                 Effect: Allow
                 Action:
-                  - lambda:CreateFunction
-                  - lambda:DeleteFunction
-                  - lambda:GetFunction
-                  - lambda:GetFunctionConfiguration
-                  - lambda:UpdateFunctionCode
-                  - lambda:UpdateFunctionConfiguration
-                  - lambda:ListVersionsByFunction
-                  - lambda:PublishLayerVersion
-                  - lambda:DeleteLayerVersion
-                  - lambda:GetLayerVersion
-                  - lambda:TagResource
-                  - lambda:UntagResource
-                  - lambda:ListTags
-                  - lambda:AddPermission
-                  - lambda:RemovePermission
-                  - lambda:GetPolicy
-                Resource:
-                  - !Sub 'arn:aws:lambda:*:${AWS::AccountId}:function:simple-saml-idp-*-${Environment}'
-                  - !Sub 'arn:aws:lambda:*:${AWS::AccountId}:layer:simple-saml-idp-*-${Environment}'
-                  - !Sub 'arn:aws:lambda:*:${AWS::AccountId}:layer:simple-saml-idp-*-${Environment}:*'
-              
-              # API Gateway permissions
-              - Sid: APIGatewayManagement
-                Effect: Allow
-                Action:
-                  - apigateway:GET
-                  - apigateway:POST
-                  - apigateway:PUT
-                  - apigateway:PATCH
-                  - apigateway:DELETE
-                  - apigateway:TagResource
-                  - apigateway:UntagResource
-                Resource:
-                  - !Sub 'arn:aws:apigateway:*::/apis'
-                  - !Sub 'arn:aws:apigateway:*::/apis/*'
-                  - !Sub 'arn:aws:apigateway:*::/tags/*'
-              
-              # DynamoDB permissions
-              - Sid: DynamoDBManagement
-                Effect: Allow
-                Action:
-                  - dynamodb:CreateTable
-                  - dynamodb:DeleteTable
-                  - dynamodb:DescribeTable
-                  - dynamodb:DescribeContinuousBackups
-                  - dynamodb:DescribeTimeToLive
-                  - dynamodb:ListTagsOfResource
-                  - dynamodb:TagResource
-                  - dynamodb:UntagResource
-                  - dynamodb:UpdateTable
-                  - dynamodb:UpdateContinuousBackups
-                  - dynamodb:UpdateTimeToLive
-                Resource:
-                  - !Sub 'arn:aws:dynamodb:*:${AWS::AccountId}:table/simple-saml-idp-*-${Environment}'
-              
-              # SSM Parameter Store permissions
-              - Sid: SSMParameterManagement
-                Effect: Allow
-                Action:
-                  - ssm:PutParameter
-                  - ssm:DeleteParameter
-                  - ssm:GetParameter
-                  - ssm:GetParameters
-                  - ssm:DescribeParameters
-                  - ssm:AddTagsToResource
-                  - ssm:RemoveTagsFromResource
-                  - ssm:ListTagsForResource
-                Resource:
-                  - !Sub 'arn:aws:ssm:*:${AWS::AccountId}:parameter/simple-saml-idp/${Environment}/*'
-              
-              # S3 permissions
-              - Sid: S3BucketManagement
-                Effect: Allow
-                Action:
-                  - s3:CreateBucket
-                  - s3:DeleteBucket
-                  - s3:GetBucketLocation
-                  - s3:GetBucketPolicy
-                  - s3:GetBucketVersioning
-                  - s3:GetBucketPublicAccessBlock
-                  - s3:GetEncryptionConfiguration
-                  - s3:GetBucketAcl
-                  - s3:GetBucketCORS
-                  - s3:GetBucketLogging
-                  - s3:GetBucketRequestPayment
-                  - s3:GetBucketTagging
-                  - s3:GetBucketWebsite
-                  - s3:GetLifecycleConfiguration
-                  - s3:GetReplicationConfiguration
-                  - s3:GetAccelerateConfiguration
-                  - s3:GetBucketObjectLockConfiguration
-                  - s3:PutBucketPolicy
-                  - s3:PutBucketVersioning
-                  - s3:PutBucketPublicAccessBlock
-                  - s3:PutEncryptionConfiguration
-                  - s3:PutBucketAcl
-                  - s3:PutBucketTagging
-                  - s3:DeleteBucketPolicy
-                  - s3:ListBucket
-                  - s3:PutObject
-                  - s3:GetObject
-                  - s3:DeleteObject
-                  - s3:ListBucketVersions
-                  - s3:ListBucketMultipartUploads
-                  - s3:AbortMultipartUpload
-                  - s3:PutObjectAcl
-                  - s3:PutObjectTagging
-                  - s3:GetObjectTagging
-                  - s3:GetObjectAcl
-                  - s3:PutLifecycleConfiguration
-                Resource:
-                  - !Sub 'arn:aws:s3:::simple-saml-idp-login-${Environment}-*'
-                  - !Sub 'arn:aws:s3:::simple-saml-idp-login-${Environment}-*/*'
-
-              # CloudFront permissions (conditional - only needed if enable_cloudfront = true)
-              - Sid: CloudFrontManagement
-                Effect: Allow
-                Action:
-                  - cloudfront:CreateDistribution
-                  - cloudfront:GetDistribution
-                  - cloudfront:GetDistributionConfig
-                  - cloudfront:UpdateDistribution
-                  - cloudfront:DeleteDistribution
-                  - cloudfront:TagResource
-                  - cloudfront:ListTagsForResource
-                  - cloudfront:CreateCloudFrontOriginAccessIdentity
-                  - cloudfront:GetCloudFrontOriginAccessIdentity
-                  - cloudfront:DeleteCloudFrontOriginAccessIdentity
-                  - cloudfront:GetInvalidation
-                  - cloudfront:CreateInvalidation
+                  - ec2:CreateVpc
+                  - ec2:DeleteVpc
+                  - ec2:ModifyVpcAttribute
+                  - ec2:DescribeVpcs
+                  - ec2:CreateInternetGateway
+                  - ec2:AttachInternetGateway
+                  - ec2:DetachInternetGateway
+                  - ec2:DeleteInternetGateway
+                  - ec2:DescribeInternetGateways
+                  - ec2:CreateEgressOnlyInternetGateway
+                  - ec2:DeleteEgressOnlyInternetGateway
+                  - ec2:DescribeEgressOnlyInternetGateways
+                  - ec2:CreateSubnet
+                  - ec2:DeleteSubnet
+                  - ec2:ModifySubnetAttribute
+                  - ec2:DescribeSubnets
+                  - ec2:CreateRouteTable
+                  - ec2:DeleteRouteTable
+                  - ec2:AssociateRouteTable
+                  - ec2:DisassociateRouteTable
+                  - ec2:ReplaceRouteTableAssociation
+                  - ec2:DescribeRouteTables
+                  - ec2:CreateRoute
+                  - ec2:DeleteRoute
+                  - ec2:ReplaceRoute
+                  - ec2:CreateNetworkAcl
+                  - ec2:DeleteNetworkAcl
+                  - ec2:DescribeNetworkAcls
+                  - ec2:CreateNetworkAclEntry
+                  - ec2:DeleteNetworkAclEntry
+                  - ec2:ReplaceNetworkAclEntry
+                  - ec2:ReplaceNetworkAclAssociation
+                  - ec2:DescribeSecurityGroups
+                  - ec2:RevokeSecurityGroupIngress
+                  - ec2:RevokeSecurityGroupEgress
+                  - ec2:AuthorizeSecurityGroupIngress
+                  - ec2:AuthorizeSecurityGroupEgress
+                  - ec2:CreateTags
+                  - ec2:DeleteTags
+                  - ec2:DescribeTags
+                  - ec2:DescribeAvailabilityZones
                 Resource: '*'
 
-              # IAM permissions for Lambda execution role
-              - Sid: IAMRoleManagement
-                Effect: Allow
-                Action:
-                  - iam:CreateRole
-                  - iam:DeleteRole
-                  - iam:GetRole
-                  - iam:GetRolePolicy
-                  - iam:PutRolePolicy
-                  - iam:DeleteRolePolicy
-                  - iam:ListRolePolicies
-                  - iam:ListAttachedRolePolicies
-                  - iam:AttachRolePolicy
-                  - iam:DetachRolePolicy
-                  - iam:TagRole
-                  - iam:UntagRole
-                  - iam:ListRoleTags
-                  - iam:ListInstanceProfilesForRole
-                  - iam:PassRole
-                Resource:
-                  - !Sub 'arn:aws:iam::${AWS::AccountId}:role/simple-saml-idp-lambda-${Environment}'
-              
-              # IAM permissions for managed policies (read-only)
-              - Sid: IAMPolicyReadAccess
-                Effect: Allow
-                Action:
-                  - iam:GetPolicy
-                  - iam:GetPolicyVersion
-                  - iam:ListPolicyVersions
-                Resource:
-                  - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-              
-              # CloudWatch Logs permissions (for Lambda and API Gateway)
-              - Sid: CloudWatchLogsManagement
-                Effect: Allow
-                Action:
-                  - logs:CreateLogGroup
-                  - logs:DeleteLogGroup
-                  - logs:DescribeLogGroups
-                  - logs:DescribeLogStreams
-                  - logs:ListTagsLogGroup
-                  - logs:TagLogGroup
-                  - logs:UntagLogGroup
-                  - logs:PutRetentionPolicy
-                  - logs:DeleteRetentionPolicy
-                Resource:
-                  - !Sub 'arn:aws:logs:*:${AWS::AccountId}:log-group:/aws/lambda/simple-saml-idp-*-${Environment}'
-                  - !Sub 'arn:aws:logs:*:${AWS::AccountId}:log-group:/aws/lambda/simple-saml-idp-*-${Environment}:*'
-                  - !Sub 'arn:aws:logs:*:${AWS::AccountId}:log-group:/aws/apigateway/simple-saml-idp-${Environment}'
-                  - !Sub 'arn:aws:logs:*:${AWS::AccountId}:log-group:/aws/apigateway/simple-saml-idp-${Environment}:*'
-                  - !Sub 'arn:aws:logs:*:${AWS::AccountId}:log-group::log-stream:'
-
-              - Sid: CloudWatchLogsResourcePolicy
-                Effect: Allow
-                Action:
-                  - logs:ListTagsForResource
-                  - logs:ListLogDeliveries
-                  - logs:CreateLogDelivery
-                  - logs:UpdateLogDelivery
-                  - logs:DeleteLogDelivery
-                  - logs:GetLogDelivery
-                  - logs:PutResourcePolicy
-                  - logs:DescribeResourcePolicies
-                Resource: '*'
-
-              - Sid: IAMSAMLProviderManagement
-                Effect: Allow
-                Action:
-                  - iam:CreateSAMLProvider
-                  - iam:TagSAMLProvider
-                  - iam:GetSAMLProvider
-                  - iam:ListSAMLProviders
-                  - iam:DeleteSAMLProvider
-                Resource: !Sub 'arn:aws:iam::${AWS::AccountId}:saml-provider/*'
-
-              - Sid: IAMServiceLinkedRole
-                Effect: Allow
-                Action:
-                  - iam:CreateServiceLinkedRole
-                Resource: '*'
-              
-              # Terraform state and resource discovery
-              # Wildcard resource access is required for list/discovery operations that Terraform
-              # uses to refresh state and detect drift. apigateway:GET is intentionally duplicated
-              # here for discovery, while APIGatewayManagement has scoped resources for CRUD operations.
+              # Terraform read/discovery operations for planning, refresh and drift detection
               - Sid: ResourceDiscovery
                 Effect: Allow
                 Action:
-                  - apigateway:GET
-                  - lambda:ListFunctions
-                  - lambda:GetFunctionCodeSigningConfig
-                  - dynamodb:ListTables
-                  - ssm:DescribeParameters
-                  - s3:ListAllMyBuckets
-                  - iam:ListRoles
-                  - cloudfront:ListDistributions
-                  - cloudfront:ListCloudFrontOriginAccessIdentities
+                  - ec2:DescribeAccountAttributes
+                  - ec2:DescribeRegions
                 Resource: '*'
       Tags:
         - Key: Project
