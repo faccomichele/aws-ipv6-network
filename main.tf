@@ -41,8 +41,8 @@ resource "aws_subnet" "public" {
   ipv6_cidr_block                     = each.value.ipv6_cidr_block
   ipv6_native                         = true
   assign_ipv6_address_on_creation     = true
-  map_public_ip_on_launch             = false
-  private_dns_hostname_type_on_launch = "resource-name"
+  # map_public_ip_on_launch             = false
+  # private_dns_hostname_type_on_launch = "resource-name"
 
   tags = merge(local.tags,
     {
@@ -61,8 +61,8 @@ resource "aws_subnet" "private" {
   ipv6_cidr_block                     = each.value.ipv6_cidr_block
   ipv6_native                         = true
   assign_ipv6_address_on_creation     = true
-  map_public_ip_on_launch             = false
-  private_dns_hostname_type_on_launch = "resource-name"
+  # map_public_ip_on_launch             = false
+  # private_dns_hostname_type_on_launch = "resource-name"
 
   tags = merge(local.tags,
     {
