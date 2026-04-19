@@ -15,6 +15,11 @@ on:
         default: false
         type: boolean
 
+            
+concurrency:
+  group: pr-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   id-token: write
   pull-requests: write

@@ -2,10 +2,15 @@
 
 name: Pull Request - Validate
 
+
 on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
   workflow_dispatch:
+    
+concurrency:
+  group: pr-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   id-token: write
