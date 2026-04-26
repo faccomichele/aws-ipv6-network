@@ -14,7 +14,6 @@ on:
         required: true
         default: false
         type: boolean
-
             
 concurrency:
   group: pr-${{ github.ref }}
@@ -28,7 +27,7 @@ permissions:
 jobs:
   dev-apply:
     name: "[DEV] - Deploy"
-    uses: faccomichele/utils-n-scripts/.github/workflows/terraform-run.yml@main
+    uses: faccomichele-org/gha-reusables/.github/workflows/terraform-run.yml@main
     with:
       environment: 'dev'
       region: 'eu-central-1'
@@ -41,7 +40,7 @@ jobs:
     name: "[DEV] - Cleanup"
     needs: dev-apply
     if: ${{ always() && (github.event.inputs.force_destroy == true || needs.dev-apply.result == 'success') }}
-    uses: faccomichele/utils-n-scripts/.github/workflows/terraform-run.yml@main
+    uses: faccomichele-org/gha-reusables/.github/workflows/terraform-run.yml@main
     with:
       environment: 'dev'
       region: 'eu-central-1'
