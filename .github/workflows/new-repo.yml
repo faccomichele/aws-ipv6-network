@@ -1,0 +1,19 @@
+# This is manually triggered to prepare the repository for the initial sync of the IaC configuration. It runs a destroy to ensure that any existing resources that might conflict with the Terraform configuration are removed before the first apply. This is especially useful if you are converting an existing repository with some manual setup into being fully managed by Terraform.
+
+name: New Repo - Prepare for IaC Sync
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+      
+concurrency:
+  group: unique
+  cancel-in-progress: true
+
+jobs:
+  main:
+    name: "[SELF]"
+    uses: faccomichele-org/gha-reusables/.github/workflows/delete-labels.yml@main
