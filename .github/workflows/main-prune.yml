@@ -17,7 +17,7 @@ concurrency:
 jobs:
   dev:
     name: "[DEV]"
-    uses: faccomichele/utils-n-scripts/.github/workflows/terraform-run.yml@main
+    uses: faccomichele-org/gha-reusables/.github/workflows/terraform-run.yml@main
     with:
       environment: 'dev'
       region: 'eu-central-1'

@@ -21,7 +21,7 @@ jobs:
   dev:
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     name: "[DEV]"
-    uses: faccomichele/utils-n-scripts/.github/workflows/terraform-run.yml@main
+    uses: faccomichele-org/gha-reusables/.github/workflows/terraform-run.yml@main
     with:
       environment: 'dev'
       region: 'eu-central-1'

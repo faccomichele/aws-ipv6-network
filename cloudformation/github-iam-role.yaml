@@ -31,7 +31,7 @@ Parameters:
   Organization:
     Type: String
     Description: GitHub organization name
-    Default: faccomichele
+    Default: faccomichele-org
     MinLength: 1
     MaxLength: 63
     AllowedPattern: ^[a-z0-9-]+$
@@ -54,16 +54,6 @@ Parameters:
       - stg
       - prod
     Default: dev
-
-# Mapping from lower to upper as CFT does not have intrinsic functions for string case conversion
-Mappings:
-  EnvironmentMap:
-    dev:
-      Upper: DEV
-    stg:
-      Upper: STG
-    prod:
-      Upper: PROD
 
 Resources:
   # IAM role for GitHub Actions (repository-specific)
@@ -175,16 +165,16 @@ Outputs:
   AwsId:
     Value:
       Fn::Join:
-        - ''
-        - - !FindInMap [EnvironmentMap, !Ref Environment, Upper]
-          - '_AWS_ID = '
+        - ' '
+        - - 'ACCOUNT_ID'
+          - '='
           - !Ref 'AWS::AccountId'
   RoleSecret:
     Value:
       Fn::Join:
-        - ''
-        - - !FindInMap [EnvironmentMap, !Ref Environment, Upper]
-          - '_ROLE_SECRET = '
+        - ' '
+        - - 'ROLE_SECRET'
+          - "="
           - Fn::Select:
               - 8
               - Fn::Split:
